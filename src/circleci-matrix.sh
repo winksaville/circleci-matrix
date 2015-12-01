@@ -26,7 +26,9 @@ info() {
 }
 
 print_horizontal_rule () {
-    printf "%$(tput cols)s\n" | tr " " "-"
+    local rule_char=$1
+    if [ "$rule_char" == "" ]; then rule_char="-"; fi
+    printf "%$(tput cols)s\n" | tr " " "${rule_char}"
 }
 
 print_help() {
@@ -170,6 +172,8 @@ process_envs() {
 main() {
     parse_args $@
 
+    print_horizontal_rule "="
+    info "circleci-matrix file: $CONFIG_FILE"
     info "circleci-matrix version: $VERSION"
     info "circleci node total: $CIRCLE_NODE_TOTAL"
     info "circleci node index: $CIRCLE_NODE_INDEX"

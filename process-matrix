@@ -1,0 +1,19 @@
+THIS_DIR=$(dirname $(realpath $0))
+
+fileCount=0
+failureCount=0
+
+IFS=', ' read -r -a params <<< "$@"
+
+for file in ${params[@]}; do
+  ((fileCount=fileCount+1))
+  ${THIS_DIR}/src/circleci-matrix.sh --config $file
+  (( "$?" != 0 )) && ((failureCount=failureCount+1))
+done
+
+if (( "$failureCount" > 0 )); then
+  echo "FAILURE in $failureCount of $fileCount file(s)"
+  exit 1
+else
+  echo "SUCCESS in $fileCount file(s)"
+fi
